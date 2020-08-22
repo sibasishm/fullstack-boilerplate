@@ -1,3 +1,5 @@
 ## Full-stack boilerplate
 
-dummy description goes here
+### Server
+
+-   mikro-orm is to interact(CRUD operations) with the database.
