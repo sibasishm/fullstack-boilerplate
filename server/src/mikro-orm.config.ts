@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 import path from 'path';
 
 import { MikroORM } from '@mikro-orm/core';
@@ -10,7 +12,8 @@ export default {
 	},
 	entities: [Quote],
 	dbName: 'quotebook',
-	// Add credentials
+	user: process.env.DB_USER,
+	password: process.env.DB_PASSWORD,
 	type: 'postgresql',
 	debug: process.env.NODE_ENV !== 'production',
 } as Parameters<typeof MikroORM.init>[0];
