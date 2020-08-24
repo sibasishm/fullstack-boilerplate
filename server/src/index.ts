@@ -1,12 +1,13 @@
 require('dotenv').config();
 
+import 'reflect-metadata';
 import express from 'express';
 import { MikroORM } from '@mikro-orm/core';
 import mikroConfig from './mikro-orm.config';
 import { ApolloServer } from 'apollo-server-express';
 import { buildSchema } from 'type-graphql';
 
-import { TestResolver } from './resolvers/test';
+import { QuoteResolver } from './resolvers/quote';
 
 const main = async () => {
 	const orm = await MikroORM.init(mikroConfig);
@@ -17,9 +18,10 @@ const main = async () => {
 
 	const apolloServer = new ApolloServer({
 		schema: await buildSchema({
-			resolvers: [TestResolver],
+			resolvers: [QuoteResolver],
 			validate: false,
 		}),
+		context: () => ({ em: orm.em }),
 	});
 
 	apolloServer.applyMiddleware({ app });
