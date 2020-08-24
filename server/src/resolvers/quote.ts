@@ -1,4 +1,4 @@
-import { Resolver, Query, Ctx, Arg, Int } from 'type-graphql';
+import { Resolver, Query, Ctx, Arg, Mutation } from 'type-graphql';
 
 import { Quote } from '../entities/Quote';
 import { MyContext } from 'src/types';
@@ -12,9 +12,51 @@ export class QuoteResolver {
 
 	@Query(() => Quote, { nullable: true })
 	quote(
-		@Arg('id', () => Int) id: number,
+		@Arg('id') id: number,
 		@Ctx() { em }: MyContext
 	): Promise<Quote | null> {
 		return em.findOne(Quote, { id });
+	}
+
+	@Mutation(() => Quote)
+	async createQuote(
+		@Arg('title') title: string,
+		@Ctx() { em }: MyContext
+	): Promise<Quote> {
+		const quote = em.create(Quote, { title });
+		await em.persistAndFlush(quote);
+
+		return quote;
+	}
+
+	@Mutation(() => Quote, { nullable: true })
+	async updatedQuote(
+		@Arg('id') id: number,
+		@Arg('title') title: string,
+		@Ctx() { em }: MyContext
+	): Promise<Quote | null> {
+		const quote = await em.findOne(Quote, { id });
+
+		if (!quote) return null;
+
+		quote.title = title;
+		await em.persistAndFlush(quote);
+
+		return quote;
+	}
+
+	@Mutation(() => Boolean)
+	async deleteQuote(
+		@Arg('id') id: number,
+		@Ctx() { em }: MyContext
+	): Promise<boolean> {
+		try {
+			await em.nativeDelete(Quote, { id });
+		} catch (err) {
+			console.log(err);
+			return false;
+		}
+
+		return true;
 	}
 }
