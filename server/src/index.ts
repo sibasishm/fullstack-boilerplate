@@ -1,21 +1,23 @@
-require('dotenv').config();
-
 import 'reflect-metadata';
 import express from 'express';
+import session from 'express-session';
 import { MikroORM } from '@mikro-orm/core';
-import mikroConfig from './mikro-orm.config';
-import { ApolloServer } from 'apollo-server-express';
 import { buildSchema } from 'type-graphql';
+import { ApolloServer } from 'apollo-server-express';
+
+import mikroConfig from './mikro-orm.config';
+import sessionConfig from './session.config';
 
 import { QuoteResolver } from './resolvers/quote';
 import { AuthResolver } from './resolvers/auth';
 
 const main = async () => {
 	const orm = await MikroORM.init(mikroConfig);
-
 	await orm.getMigrator().up();
 
 	const app = express();
+
+	app.use(session(sessionConfig));
 
 	const apolloServer = new ApolloServer({
 		schema: await buildSchema({
@@ -24,7 +26,6 @@ const main = async () => {
 		}),
 		context: () => ({ em: orm.em }),
 	});
-
 	apolloServer.applyMiddleware({ app });
 
 	app.listen(process.env.PORT, () => {
@@ -32,7 +33,7 @@ const main = async () => {
 	});
 
 	app.get('/', (_, res) => {
-		res.send('Hello World!');
+		res.send('hello');
 	});
 };
 

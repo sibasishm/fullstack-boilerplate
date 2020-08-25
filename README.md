@@ -1,6 +1,6 @@
 ## Full-stack boilerplate
 
-A full stack [project](youtu.be/i6ypd7qv3z8) by [@benawad](https://github.com/benawad) from scratch using React, Typescript and GraphQL.
+A full stack [project](youtu.be/i6ypd7qv3z8) from scratch using React, Typescript and GraphQL inspired by [@benawad](https://github.com/benawad).
 
 ### Server
 
@@ -9,3 +9,5 @@ A full stack [project](youtu.be/i6ypd7qv3z8) by [@benawad](https://github.com/be
 -   type-graphql to define GraphQL schemas including types.
 -   apollo and express as the server.
 -   argon2 for password hasing and not bcrypt.js because of [this reason](https://security.stackexchange.com/questions/193351/in-2018-what-is-the-recommended-hash-to-store-passwords-bcrypt-scrypt-argon2).
+-   express-session for session authentication.
+-   redis for session store with connect-redis middleware.
