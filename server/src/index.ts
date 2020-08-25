@@ -10,6 +10,7 @@ import sessionConfig from './session.config';
 
 import { QuoteResolver } from './resolvers/quote';
 import { AuthResolver } from './resolvers/auth';
+import { UserResolver } from './resolvers/user';
 
 const main = async () => {
 	const orm = await MikroORM.init(mikroConfig);
@@ -21,10 +22,10 @@ const main = async () => {
 
 	const apolloServer = new ApolloServer({
 		schema: await buildSchema({
-			resolvers: [QuoteResolver, AuthResolver],
+			resolvers: [QuoteResolver, AuthResolver, UserResolver],
 			validate: false,
 		}),
-		context: () => ({ em: orm.em }),
+		context: ({ req, res }) => ({ em: orm.em, req, res }),
 	});
 	apolloServer.applyMiddleware({ app });
 
@@ -33,7 +34,7 @@ const main = async () => {
 	});
 
 	app.get('/', (_, res) => {
-		res.send('hello');
+		res.send('GraphQL API is running on /graphql');
 	});
 };
 
