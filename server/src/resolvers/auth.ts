@@ -44,7 +44,7 @@ export class AuthResolver {
 	@Mutation(() => UserResponse)
 	async register(
 		@Arg('credentials') { username, password }: Credentials,
-		@Ctx() { em }: MyContext
+		@Ctx() { em, req }: MyContext
 	): Promise<UserResponse> {
 		if (username.length <= 4) {
 			return {
@@ -87,13 +87,15 @@ export class AuthResolver {
 			}
 		}
 
+		req.session.userId = user.id;
+
 		return { user };
 	}
 
 	@Mutation(() => UserResponse)
 	async login(
 		@Arg('credentials') { username, password }: Credentials,
-		@Ctx() { em }: MyContext
+		@Ctx() { em, req }: MyContext
 	): Promise<UserResponse> {
 		const user = await em.findOne(User, { username });
 
@@ -110,6 +112,8 @@ export class AuthResolver {
 				errors: [{ name: 'password', message: 'Invalid credentails.' }],
 			};
 		}
+
+		req.session.userId = user.id;
 
 		return { user };
 	}
