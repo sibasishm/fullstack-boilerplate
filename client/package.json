@@ -14,7 +14,8 @@
 		"@chakra-ui/theme": "^1.0.0-rc.2",
 		"next": "^9.5.2",
 		"react": "^16.13.1",
-		"react-dom": "^16.13.1"
+		"react-dom": "^16.13.1",
+		"react-hook-form": "^6.5.3"
 	},
 	"devDependencies": {
 		"@types/node": "^14.6.0",
