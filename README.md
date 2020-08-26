@@ -20,4 +20,8 @@ A full stack [project](youtu.be/i6ypd7qv3z8) from scratch using React, Typescrip
 -   express-session will create a singed token from the redis key and set it as a cookie in the user's browser such as qweghus87adjhv81.
 -   whenever the user makes a request this token will be sent to the server.
 -   On the server it gets decrypted and turns qweghus87adjhv81 -> sess:qwe123qwe
--   Then make a request to redis and fetch the value with the key such as sess:qwe123qwe -> {userId: 1}..
+-   Then make a request to redis and fetch the value with the key such as sess:qwe123qwe -> {userId: 1}.
+
+### Client
+
+-   Next.js with Chakra UI
