@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useMutation } from 'urql';
 import {
 	FormControl,
 	FormLabel,
@@ -17,17 +18,30 @@ type FormData = {
 	password: string;
 };
 
+const REGISTER_MUTATION = `
+mutation Register($username: String!, $password: String!) {
+	register(credentials: {username: $username, password: $password}) {
+		errors {
+			name
+			message
+		}
+		user {
+			id
+			username
+		}
+	}
+}
+`;
+
 const Register: React.FC<RegisterProps> = ({}) => {
 	const { handleSubmit, errors, register } = useForm<FormData>();
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [{}, signup] = useMutation(REGISTER_MUTATION);
 
 	const onSubmit = values => {
 		setIsSubmitting(true);
-
-		setTimeout(() => {
-			alert(JSON.stringify(values, null, 2));
-			setIsSubmitting(false);
-		}, 1000);
+		signup(values);
+		setIsSubmitting(false);
 	};
 
 	return (
@@ -52,11 +66,11 @@ const Register: React.FC<RegisterProps> = ({}) => {
 							name='password'
 							placeholder='********'
 							type='password'
-							ref={register({ required: true, minLength: 8 })}
+							ref={register({ required: true, minLength: 6 })}
 						/>
 						<FormErrorMessage>
 							{errors.password &&
-								'Password is required and must be more than 8 characters.'}
+								'Password is required and must be more than 6 characters.'}
 						</FormErrorMessage>
 					</FormControl>
 					<Button
