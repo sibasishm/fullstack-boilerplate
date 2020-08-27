@@ -4,6 +4,7 @@ import session from 'express-session';
 import { MikroORM } from '@mikro-orm/core';
 import { buildSchema } from 'type-graphql';
 import { ApolloServer } from 'apollo-server-express';
+import cors from 'cors';
 
 import mikroConfig from './mikro-orm.config';
 import sessionConfig from './session.config';
@@ -18,6 +19,13 @@ const main = async () => {
 
 	const app = express();
 
+	app.use(
+		cors({
+			origin: 'http://localhost:3000',
+			credentials: true,
+		})
+	);
+
 	app.use(session(sessionConfig));
 
 	const apolloServer = new ApolloServer({
@@ -27,7 +35,7 @@ const main = async () => {
 		}),
 		context: ({ req, res }) => ({ em: orm.em, req, res }),
 	});
-	apolloServer.applyMiddleware({ app });
+	apolloServer.applyMiddleware({ app, cors: false });
 
 	app.listen(process.env.PORT, () => {
 		console.log(`server started on localhost:${process.env.PORT}`);

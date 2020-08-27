@@ -57,12 +57,12 @@ export class AuthResolver {
 			};
 		}
 
-		if (password.length <= 8) {
+		if (password.length <= 6) {
 			return {
 				errors: [
 					{
 						name: 'password',
-						message: 'Password must be more than 8 characters.',
+						message: 'Password must be more than 6 characters.',
 					},
 				],
 			};
